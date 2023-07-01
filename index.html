@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<head>
+    <title>Pick Your Night</title>
+    <link rel="icon" href="favicon-32.png" sizes="32x32">
+    <link rel="icon" href="favicon-128.png" sizes="128x128">
+    <link rel="icon" href="favicon-180.png" sizes="180x180">
+    <link rel="icon" href="favicon-192.png" sizes="192x192">
+    <link rel="manifest" href="app.webmanifest">
+    <style>
+        body {
+            position: fixed;
+            margin: 0px;
+        }
+        body > div {
+            position: fixed;
+            top: 0px;
+            bottom: 0px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 2s;
+        }
+        button {
+            font-size: 36px;
+            padding: 12px;
+        }
+        .wait {
+            font-size: 48px;
+            height: 50%;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #wait1 {
+            color: red;
+            top: 0%;
+        }
+        #wait2 {
+            color: green;
+            top: 16%;
+        }
+        #wait3 {
+            color: blue;
+            top: 33%;
+        }
+        #wait4 {
+            color: orange;
+            top: 50%; 
+        }
+        #result {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #idea {
+            font-size: 80px;
+            margin-bottom: 15px;
+        }
+        #credits {
+            font-size: 20px;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .credit-spacer {
+            height: 20px;
+        }
+        .credit-title {
+            font-weight: bold;
+        }
+        .credit-who {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        .credit-who > div {
+            margin-left: 12px;
+            margin-right: 12px;
+        }
+        .credits-action {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            margin: 12px;
+            text-decoration: none;
+            color: black;
+        }
+        .credits-action:hover {
+            color: red;
+        }
+        .credits-open {
+            font-size: 18px;
+        }
+        .credits-close {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<script>
+    let pickCount = 0;
+
+    const IDEAS = [
+        {name: "Birthday Planning", when: "Feb-Mar", frequency: 4},
+        {name: "Christmas Planning", when: "Nov-Dec", frequency: 4},
+        {name: "Cleanup Night"},
+        {name: "Clothes Planning"},
+        {name: "Cooking/Baking Night"},
+        {name: "Craft Night"},
+        {name: "Game Night", frequency: 2},
+        {name: "Halloween Planning", when: "Sep-Oct", frequency: 4},
+        {name: "Meal Planning"},
+        {name: "Movie Night", frequency: 4},
+        {name: "Story Night", frequency: 2},
+        {name: "Trip Planning", when: "Jan-Jun"},
+    ];
+
+    const MONTHS = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ]
+
+    const awaitTimeout = delay =>
+        new Promise(resolve => setTimeout(resolve, delay));
+
+    function getWeight(idea) {
+        let frequency = idea.frequency;
+        if (frequency == null) {
+            frequency = 1;
+        }
+
+        if (idea.when != null) {
+            let [start_str, end_str] = idea.when.split("-");
+            let start = MONTHS.indexOf(start_str);
+            let end = MONTHS.indexOf(end_str);
+            let thisMonth = new Date().getMonth();
+            if (thisMonth < start || thisMonth > end) {
+                return 0;
+            }
+        }
+
+        return frequency;
+    }
+
+    function pickIdea() {
+        let totalWeight = 0;
+        for (const idea of IDEAS) {
+            totalWeight += getWeight(idea);
+        }
+
+        const randValue = Math.random() * totalWeight;
+
+        let currentWeight = 0;
+        for (const idea of IDEAS) {
+            currentWeight += getWeight(idea);
+            if (currentWeight > randValue) {
+                return idea;
+            }
+        }
+    }
+
+    async function inOut(from_id, to_id) {
+        const from = document.getElementById(from_id)
+        const to = document.getElementById(to_id)
+        from.style.opacity = 0;
+        to.style.visibility = "visible";
+        void to.offsetWidth;
+        to.style.opacity = 1;
+        await awaitTimeout(2000);
+        from.style.visibility = "hidden";
+    }
+
+    async function pick() {
+        pickCount++;
+        const idea = pickIdea();
+
+        if (pickCount == 1) {
+            await inOut("pick", "wait1");
+        } else {
+            await inOut("result", "wait1");
+        }
+        await inOut("wait1", "wait2");
+        await inOut("wait2", "wait3");
+        await inOut("wait3", "wait4");
+        document.getElementById("idea").innerText = idea.name;
+        await inOut("wait4", "result");
+    }
+
+    async function openCredits() {
+        if (pickCount == 0) {
+            await inOut("pick", "credits");
+        } else {
+            await inOut("result", "credits");
+        }
+    }
+
+    async function closeCredits() {
+        if (pickCount == 0) {
+            await inOut("credits", "pick");
+        } else {
+            await inOut("credits", result);
+        }
+    }
+</script>
+<body>
+    <div id="pick">
+        <button onclick="pick()">Pick your night</button>
+        <a class="credits-action credits-open" href="#" onclick="openCredits()">Credits</a>
+    </div>
+    <div class="wait" id="wait1">Thinking...</div>
+    <div class="wait" id="wait2">Thinking...</div>
+    <div class="wait" id="wait3">Thinking...</div>
+    <div class="wait" id="wait4">Thought!...</div>
+    <div id="result">
+        <div id="idea">
+            Movie Night!
+        </div>
+        <button onclick="pick()">Try again</button>
+        <a class="credits-action credits-open" href="#" onclick="openCredits()">Credits</a>
+    </div>
+    <div id="credits">
+        <div class="credit-title">Producer</div>
+        <div class="credit-who">Keenan Taylor</div>
+        <div class="credit-title">Tech Lead</div>
+        <div class="credit-who">Owen Taylor</div>
+        <div class="credit-spacer"></div>
+        <div class="credit-title">Interaction Design</div>
+        <div class="credit-who">Keenan Taylor</div>
+        <div class="credit-title">Writers</div>
+        <div class="credit-who">
+            <div>Keenan Taylor</div>
+            <div>Sonya Taylor</div>
+            <div>Nadya Taylor</div>
+        </div>
+        <div class="credit-title">Icon Art</div>
+        <div class="credit-who">Owen Taylor</div>
+        <div class="credit-title">Testing</div>
+        <div class="credit-who">Keenan Taylor</div>
+        <a class="credits-action credits-close" href="#" onclick="closeCredits()">&#x1F7AA;</a>
+    </div>
+</body>
