@@ -203,10 +203,10 @@
         await inOut("wait3", "wait4");
         document.getElementById("idea").innerText = idea.name;
         let outOfString;
-        if (Math.round(outOf) != outOf) {
-            outOfString = outOf.toFixed(1);
+        if (Math.round(outOf) == outOf) {
+            outOfString = outOf.toString();
         } else {
-            outOfString = outOf.toPrecision
+            outOfString = outOf.toFixed(1);
         }
         document.getElementById("rarity").innerText = `(chance: 1 out of ${outOfString})`;
         await inOut("wait4", "result");
