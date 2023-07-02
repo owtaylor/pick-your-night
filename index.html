@@ -7,6 +7,10 @@
     <link rel="icon" href="favicon-192.png" sizes="192x192">
     <link rel="manifest" href="app.webmanifest">
     <style>
+        html {
+            -webkit-text-size-adjust: none;
+        }
+
         body {
             position: fixed;
             margin: 0px;
@@ -23,11 +27,11 @@
             transition: opacity 2s;
         }
         button {
-            font-size: 36px;
-            padding: 12px;
+            font-size: 2rem;
+            padding: 1rem;
         }
         .wait {
-            font-size: 48px;
+            font-size: 3rem;
             height: 50%;
             opacity: 0;
             visibility: hidden;
@@ -53,37 +57,38 @@
             visibility: hidden;
         }
         #idea {
-            font-size: 80px;
-            margin-bottom: 10px;
+            font-size: 5rem;
+            margin-bottom: 1rem;
         }
         #rarity {
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
         #credits {
-            font-size: 20px;
+            font-size: 2rem;
             opacity: 0;
             visibility: hidden;
         }
         .credit-spacer {
-            height: 20px;
+            height: 2rem;
         }
         .credit-title {
             font-weight: bold;
         }
         .credit-who {
             display: flex;
-            margin-bottom: 12px;
+            margin-bottom: 1rem;
         }
         .credit-who > div {
-            margin-left: 12px;
-            margin-right: 12px;
+            margin-left: 1rem;
+            margin-right: 1rem;
+            text-align: center;
         }
         .credits-action {
             position: fixed;
             top: 0px;
             right: 0px;
-            margin: 12px;
+            margin: 1rem;
             text-decoration: none;
             color: black;
         }
@@ -91,10 +96,22 @@
             color: red;
         }
         .credits-open {
-            font-size: 18px;
+            font-size: 1.5rem;
         }
         .credits-close {
-            font-size: 24px;
+            font-size: 2rem;
+        }
+
+        @media screen  and (max-device-width: 480px) and (orientation: portrait) {
+            html {
+                font-size: 200%;
+            }
+            #idea {
+                font-size: 3rem;
+            }
+            #credits {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
