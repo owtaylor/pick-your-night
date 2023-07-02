@@ -5,7 +5,7 @@
     "display": "fullscreen",
     "background_color": "#fff",
     "theme_color": "#000",
-    "description": "Come up with an idea for a family evening activity.",
+    "description": "Suggest an idea for a family evening activity.",
     "icons": [
         {
             "src": "icon-120.png",
