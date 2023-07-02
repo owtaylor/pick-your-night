@@ -54,6 +54,10 @@
         }
         #idea {
             font-size: 80px;
+            margin-bottom: 10px;
+        }
+        #rarity {
+            font-size: 18px;
             margin-bottom: 15px;
         }
         #credits {
@@ -147,11 +151,12 @@
 
         const randValue = Math.random() * totalWeight;
 
-        let currentWeight = 0;
+        let soFarWeight = 0;
         for (const idea of IDEAS) {
-            currentWeight += getWeight(idea);
-            if (currentWeight > randValue) {
-                return idea;
+            let currentWeight = getWeight(idea);
+            soFarWeight += currentWeight;
+            if (soFarWeight > randValue) {
+                return [idea, totalWeight / currentWeight];
             }
         }
     }
@@ -169,7 +174,7 @@
 
     async function pick() {
         pickCount++;
-        const idea = pickIdea();
+        const [idea, outOf] = pickIdea();
 
         if (pickCount == 1) {
             await inOut("pick", "wait1");
@@ -180,6 +185,13 @@
         await inOut("wait2", "wait3");
         await inOut("wait3", "wait4");
         document.getElementById("idea").innerText = idea.name;
+        let outOfString;
+        if (Math.round(outOf) != outOf) {
+            outOfString = outOf.toFixed(1);
+        } else {
+            outOfString = outOf.toPrecision
+        }
+        document.getElementById("rarity").innerText = `(chance: 1 out of ${outOfString})`;
         await inOut("wait4", "result");
     }
 
@@ -212,6 +224,7 @@
         <div id="idea">
             Movie Night!
         </div>
+        <div id="rarity"></div>
         <button onclick="pick()">Try again</button>
         <a class="credits-action credits-open" href="#" onclick="openCredits()">Credits</a>
     </div>
