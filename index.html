@@ -32,6 +32,10 @@
             flex-direction: column;
             transition: visibility 2s, opacity 2s;
         }
+        body > div.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
         button {
             font-size: 2rem;
             padding: 1rem;
@@ -39,8 +43,6 @@
         .wait {
             font-size: 3rem;
             height: 50%;
-            opacity: 0;
-            visibility: hidden;
         }
         #wait1 {
             color: red;
@@ -58,10 +60,6 @@
             color: orange;
             top: 50%; 
         }
-        #result {
-            opacity: 0;
-            visibility: hidden;
-        }
         #idea {
             font-size: 5rem;
             margin-bottom: 1rem;
@@ -72,8 +70,6 @@
         }
         #credits {
             font-size: 2rem;
-            opacity: 0;
-            visibility: hidden;
         }
         .credit-spacer {
             height: 2rem;
@@ -160,9 +156,6 @@
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
     ]
 
-    const awaitTimeout = delay =>
-        new Promise(resolve => setTimeout(resolve, delay));
-
     function getWeight(idea) {
         let frequency = idea.frequency;
         if (frequency == null) {
@@ -200,29 +193,26 @@
         }
     }
 
-    async function inOut(from_id, to_id) {
-        const from = document.getElementById(from_id)
-        const to = document.getElementById(to_id)
-        from.style.opacity = 0;
-        to.style.visibility = "visible";
-        from.style.visibility = "hidden";
-        void to.offsetWidth;
-        to.style.opacity = 1;
-        await awaitTimeout(2000);
+    function show(id) {
+        document.getElementById(id).classList.remove("hidden");
     }
+
+    function hide(id) {
+        document.getElementById(id).classList.add("hidden");
+    }
+
+    const waitAnimation = delay =>
+        new Promise(resolve => setTimeout(resolve, 2000));
 
     async function pick() {
         pickCount++;
         const [idea, outOf] = pickIdea();
 
-        if (pickCount == 1) {
-            await inOut("pick", "wait1");
-        } else {
-            await inOut("result", "wait1");
-        }
-        await inOut("wait1", "wait2");
-        await inOut("wait2", "wait3");
-        await inOut("wait3", "wait4");
+        hide("pick"); hide("result"); show("wait1"); await waitAnimation();
+        hide("wait1"); show("wait2"); await waitAnimation();
+        hide("wait2"); show("wait3"); await waitAnimation();
+        hide("wait3"); show("wait4"); await waitAnimation();
+
         document.getElementById("idea").innerText = idea.name;
         let outOfString;
         if (Math.round(outOf) == outOf) {
@@ -231,23 +221,19 @@
             outOfString = outOf.toFixed(1);
         }
         document.getElementById("rarity").innerText = `(chance: 1 out of ${outOfString})`;
-        await inOut("wait4", "result");
+
+        hide("wait4"); show("result");
     }
 
-    async function openCredits() {
-        if (pickCount == 0) {
-            await inOut("pick", "credits");
-        } else {
-            await inOut("result", "credits");
-        }
+    function openCredits() {
+        hide("pick");
+        hide("result");
+        show("credits");
     }
 
-    async function closeCredits() {
-        if (pickCount == 0) {
-            await inOut("credits", "pick");
-        } else {
-            await inOut("credits", "result");
-        }
+    function closeCredits() {
+        hide("credits");
+        show(pickCount == 0 ? "pick" : "result");
     }
     navigator.serviceWorker.register("serviceworker.js", {scope: "/"});
 </script>
@@ -256,11 +242,11 @@
         <button onclick="pick()">Pick your night</button>
         <a class="credits-action credits-open" href="#" onclick="openCredits()">Credits</a>
     </div>
-    <div class="wait" id="wait1">Thinking...</div>
-    <div class="wait" id="wait2">Thinking...</div>
-    <div class="wait" id="wait3">Thinking...</div>
-    <div class="wait" id="wait4">Thought!...</div>
-    <div id="result">
+    <div class="wait hidden" id="wait1">Thinking...</div>
+    <div class="wait hidden" id="wait2">Thinking...</div>
+    <div class="wait hidden" id="wait3">Thinking...</div>
+    <div class="wait hidden" id="wait4">Thought!...</div>
+    <div class="hidden" id="result">
         <div id="idea">
             Movie Night!
         </div>
@@ -268,7 +254,7 @@
         <button onclick="pick()">Try again</button>
         <a class="credits-action credits-open" href="#" onclick="openCredits()">Credits</a>
     </div>
-    <div id="credits">
+    <div class="hidden" id="credits">
         <div class="credit-title">Producer</div>
         <div class="credit-who">Keenan Taylor</div>
         <div class="credit-title">Tech Lead</div>
