@@ -30,7 +30,7 @@
             justify-content: center;
             display: flex;
             flex-direction: column;
-            transition: opacity 2s;
+            transition: visibility 2s, opacity 2s;
         }
         button {
             font-size: 2rem;
@@ -205,10 +205,10 @@
         const to = document.getElementById(to_id)
         from.style.opacity = 0;
         to.style.visibility = "visible";
+        from.style.visibility = "hidden";
         void to.offsetWidth;
         to.style.opacity = 1;
         await awaitTimeout(2000);
-        from.style.visibility = "hidden";
     }
 
     async function pick() {
