@@ -7,6 +7,7 @@
     <link rel="icon" href="favicon-180.png" sizes="180x180">
     <link rel="icon" href="favicon-192.png" sizes="192x192">
     <link rel="manifest" href="app.webmanifest">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
         html {
             -webkit-text-size-adjust: none;
@@ -105,15 +106,29 @@
             font-family: sans-serif;
         }
 
-        @media screen  and (max-device-width: 480px) and (orientation: portrait) {
+        @media screen  and (max-device-width: 480px) and (orientation: portrait)
+         {
             html {
-                font-size: 200%;
+                font-size: 75%;
             }
             #idea {
                 font-size: 3rem;
             }
             #credits {
                 font-size: 1.5rem;
+            }
+        }
+
+        @media screen  and (max-device-height: 480px) and (orientation: landscape)
+         {
+            html {
+                font-size: 75%;
+            }
+            #idea {
+                font-size: 4rem;
+            }
+            #credits {
+                font-size: 1rem;
             }
         }
     </style>
