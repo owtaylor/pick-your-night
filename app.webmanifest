@@ -4,7 +4,7 @@
     "start_url": "index.html",
     "display": "fullscreen",
     "background_color": "#fff",
-    "theme_color": "#000",
+    "theme_color": "#101054",
     "description": "Suggest an idea for a family evening activity.",
     "icons": [
         {
