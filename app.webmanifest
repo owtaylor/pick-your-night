@@ -1,6 +1,6 @@
 {
     "name": "Pick Your Night",
-    "short_name": "PYN",
+    "short_name": "Pick Your Night",
     "start_url": "index.html",
     "display": "fullscreen",
     "background_color": "#fff",
